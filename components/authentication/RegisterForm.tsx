@@ -6,7 +6,6 @@ import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { emailSignIn } from "@/server/actions/email-signin";
 import {
   Form,
   FormControl,
@@ -17,7 +16,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginScehma } from "@/types/login-schema";
+import { RegisterSchema } from "@/types/register-schema";
 import * as z from "zod";
 import { Input } from "../ui/input";
 import { useAction } from "next-safe-action/hooks";
@@ -25,19 +24,20 @@ import { useAction } from "next-safe-action/hooks";
 /* Uses zodResolbrt with our login schema to validate the details */
 const RegisterForm = () => {
   const [error, setError] = useState("");
-  const form = useForm({
-    resolver: zodResolver(LoginScehma),
+  const form = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
     defaultValues: {
       email: "",
       password: "",
+      username: "",
     },
   });
 
-  const { execute, status } = useAction(emailSignIn, {}); // Provides "execute" function to trigger the action and status to track the action's status
+  // Provides "execute" function to trigger the action and status to track the action's status
 
   /* Infers the type from the zod schema*/
-  const onSubmit = (values: z.infer<typeof LoginScehma>) => {
-    execute(values);
+  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+    // execute(values);
   };
 
   return (
@@ -52,6 +52,24 @@ const RegisterForm = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div>
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="text"
+                        placeholder="johndoe@gmail.com"
+                        className="w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="email"
