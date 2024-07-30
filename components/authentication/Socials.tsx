@@ -9,7 +9,7 @@ const Socials = () => {
   return (
     <div className="flex w-full gap-4 items-center flex-col">
       <Button
-        className="w-full md:w-1/2"
+        className="w-full"
         variant={"outline"}
         onClick={() => signIn("google", { redirect: false, callbackUrl: "/" })}
       >
@@ -20,11 +20,11 @@ const Socials = () => {
       </Button>
 
       <Button
-        className="w-full  md:w-1/2"
+        className="w-full"
         variant={"outline"}
         onClick={() => signIn("github", { redirect: false, callbackUrl: "/" })}
       >
-        <div className="flex items-center gap-">
+        <div className="flex items-center gap-2">
           <FaGithub className="w-5 h-auto" />
           <p>Sign in with Github</p>
         </div>

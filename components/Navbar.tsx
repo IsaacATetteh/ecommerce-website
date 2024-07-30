@@ -10,7 +10,9 @@ export default async function Navbar() {
     <header className="bg-slate-400 py-6">
       <nav>
         <ul className="flex justify-between">
-          <li>Logo</li>
+          <li>
+            <Link href="/">Home</Link>
+          </li>
           {!session ? (
             <li>
               <Button>

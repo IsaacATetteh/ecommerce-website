@@ -6,9 +6,9 @@ import Link from "next/link";
 
 const BackButton = ({ href, label }: { href: string; label: string }) => {
   return (
-    <Button>
+    <Button className="w-full" variant={"link"}>
       <Link aria-label={label} href={href}>
-        Back
+        Create an account
       </Link>
     </Button>
   );

@@ -15,6 +15,13 @@
       "when": 1722199526105,
       "tag": "0001_absent_norman_osborn",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1722365302181,
+      "tag": "0002_nebulous_liz_osborn",
+      "breakpoints": true
     }
   ]
 }
