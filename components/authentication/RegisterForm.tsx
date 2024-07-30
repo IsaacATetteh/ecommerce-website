@@ -23,7 +23,7 @@ import { Input } from "../ui/input";
 import { useAction } from "next-safe-action/hooks";
 
 /* Uses zodResolbrt with our login schema to validate the details */
-const LoginForm = () => {
+const RegisterForm = () => {
   const [error, setError] = useState("");
   const form = useForm({
     resolver: zodResolver(LoginScehma),
@@ -43,9 +43,9 @@ const LoginForm = () => {
   return (
     <div className="flex justify-center border-2 w-full border-red-500">
       <AuthCard
-        cardTitle="Welcome"
-        backButtonHref="auth/register"
-        backButtonLabel="Create a new account"
+        cardTitle="Register an account"
+        backButtonHref="auth/login"
+        backButtonLabel="Already have an account?"
         showSocials
       >
         {/* Spreads the form properties object returned by "useForm" as props onto the Form component  */}
@@ -101,7 +101,7 @@ const LoginForm = () => {
                 status === "executing" ? "animate-pulse" : ""
               )}
             >
-              {"Login"}
+              {"Register"}
             </Button>
           </form>
         </Form>
@@ -110,4 +110,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

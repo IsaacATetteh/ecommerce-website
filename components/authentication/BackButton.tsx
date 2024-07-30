@@ -8,7 +8,7 @@ const BackButton = ({ href, label }: { href: string; label: string }) => {
   return (
     <Button className="w-full" variant={"link"}>
       <Link aria-label={label} href={href}>
-        Create an account
+        {label}
       </Link>
     </Button>
   );
