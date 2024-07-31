@@ -1,6 +1,6 @@
 import { CiCircleCheck } from "react-icons/ci";
 
-export const FormError = ({ message }: { message?: string }) => {
+export const FormSuccess = ({ message }: { message?: string }) => {
   if (!message) {
     return null;
   }

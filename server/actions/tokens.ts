@@ -30,7 +30,7 @@ export const generateEmailToken = async(email : string) => {
     }
 
     // Generate a new token
-    const emailToken = await db.insert(verificationTokens).values({token, email, expires})
+    const emailToken = await db.insert(verificationTokens).values({token, email, expires}).returning()
 
-    return token;
+    return emailToken;
 }

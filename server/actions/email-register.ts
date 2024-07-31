@@ -7,6 +7,7 @@ import { eq } from "drizzle-orm";
 import { users } from "../schema";
 import bcrypt from "bcrypt"
 import { generateEmailToken } from "./tokens";
+import { sendEmailVerification } from "./email-send";
 
 export const emailRegister = actionClient.schema(RegisterSchema).action(async ({ parsedInput: { email, password, username } }) => { 
   console.log(email, password);
@@ -27,6 +28,8 @@ export const emailRegister = actionClient.schema(RegisterSchema).action(async ({
     if(!existingUser.emailVerified) {
         //Send a confirmation email
         const verificationToken = await generateEmailToken(email);
+        await sendEmailVerification(verificationToken[0].email, verificationToken[0].token);
+
         return {success : "Email confirmation resent"}
     }
     // If the account is already verfied, error
@@ -38,5 +41,7 @@ export const emailRegister = actionClient.schema(RegisterSchema).action(async ({
   
   // Generate a new token for newly made account
   const verificationToken = await generateEmailToken(email);
+  await sendEmailVerification(verificationToken[0].token, verificationToken[0].email);
+
   return {success : "Email confirmation sent!"};
 });

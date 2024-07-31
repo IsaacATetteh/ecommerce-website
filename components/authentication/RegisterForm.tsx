@@ -21,10 +21,13 @@ import * as z from "zod";
 import { Input } from "../ui/input";
 import { useAction } from "next-safe-action/hooks";
 import { emailRegister } from "@/server/actions/email-register";
-
+import { FormSuccess } from "./FormSuccess";
+import { FormError } from "./FormError";
 /* Uses zodResolbrt with our login schema to validate the details */
 const RegisterForm = () => {
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -37,8 +40,11 @@ const RegisterForm = () => {
   // Provides "execute" function to trigger the action and status to track the action's status
   const { execute, status } = useAction(emailRegister, {
     onSuccess(data) {
+      if (data.data?.error) {
+        setError(data.data.error);
+      }
       if (data.data?.success) {
-        console.log(data.data?.success);
+        setSuccess(data.data?.success);
       }
     },
   });
@@ -116,6 +122,9 @@ const RegisterForm = () => {
                   </FormItem>
                 )}
               />
+              <FormError message={error} />
+              <FormSuccess message={success} />
+
               <Button variant={"link"} size={"sm"}>
                 <Link href="auth/reset">Forgot your passowrd?</Link>
               </Button>
