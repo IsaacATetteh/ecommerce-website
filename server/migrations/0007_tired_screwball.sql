@@ -1,0 +1,1 @@
+ALTER TABLE "verificationToken" ALTER COLUMN "id" SET NOT NULL;

@@ -11,6 +11,7 @@ import {
   import postgres from "postgres"
   import { drizzle } from "drizzle-orm/postgres-js"
   import type { AdapterAccount} from "next-auth/adapters"
+  import {createId} from "@paralleldrive/cuid2"
    
   const connectionString = "postgres://postgres:postgres@localhost:5432/drizzle"
   const pool = postgres(connectionString, { max: 1 })
@@ -20,10 +21,12 @@ import {
    
   export const users = pgTable("user", {
     id: text("id")
+      .notNull()
       .primaryKey()
-      .$defaultFn(() => crypto.randomUUID()),
-    name: text("name"),
+      .$defaultFn(() => createId()),
+    username: text("username"),
     email: text("email").unique(),
+    password: text("password"),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
     image: text("image"),
     twoFactorEnalbed : boolean("twoFactorEnabled").default(false),
@@ -54,6 +57,20 @@ import {
     })
   )
    
-
+  export const verificationTokens = pgTable(
+    "verificationToken",
+    {
+      id: text("id").notNull().$defaultFn(() => createId()),
+      token: text("token").notNull(),
+      expires: timestamp("expires", { mode: "date" }).notNull(),
+      email: text("email").notNull(),
+    },
+    (verificationToken) => ({
+      compositePk: primaryKey({
+        columns: [verificationToken.id, verificationToken.token],
+      }),
+    })
+  )
+   
  
    
