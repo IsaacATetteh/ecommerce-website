@@ -44,7 +44,7 @@ const LoginForm = () => {
     <div className="flex justify-center border-2 w-full border-red-500">
       <AuthCard
         cardTitle="Welcome"
-        backButtonHref="auth/register"
+        backButtonHref="/auth/register"
         backButtonLabel="Create a new account"
         showSocials
       >

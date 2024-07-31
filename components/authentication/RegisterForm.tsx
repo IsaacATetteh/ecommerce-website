@@ -20,6 +20,7 @@ import { RegisterSchema } from "@/types/register-schema";
 import * as z from "zod";
 import { Input } from "../ui/input";
 import { useAction } from "next-safe-action/hooks";
+import { emailRegister } from "@/server/actions/email-register";
 
 /* Uses zodResolbrt with our login schema to validate the details */
 const RegisterForm = () => {
@@ -34,17 +35,24 @@ const RegisterForm = () => {
   });
 
   // Provides "execute" function to trigger the action and status to track the action's status
+  const { execute, status } = useAction(emailRegister, {
+    onSuccess(data) {
+      if (data.data?.success) {
+        console.log(data.data?.success);
+      }
+    },
+  });
 
   /* Infers the type from the zod schema*/
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
-    // execute(values);
+    execute(values);
   };
 
   return (
     <div className="flex justify-center border-2 w-full border-red-500">
       <AuthCard
         cardTitle="Register an account"
-        backButtonHref="auth/login"
+        backButtonHref="/auth/login"
         backButtonLabel="Already have an account?"
         showSocials
       >
