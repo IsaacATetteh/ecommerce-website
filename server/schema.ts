@@ -24,8 +24,8 @@ import {
       .notNull()
       .primaryKey()
       .$defaultFn(() => createId()),
-    username: text("username"),
-    email: text("email").unique(),
+    name: text("name"),
+    email: text("email").notNull(),
     password: text("password"),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
     image: text("image"),

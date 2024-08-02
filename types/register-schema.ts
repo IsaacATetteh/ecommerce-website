@@ -7,7 +7,7 @@ export const RegisterSchema = z.object({
     password: z.string().min(8, {  
         message:"Password is too weak",
     }),    
-    username: z.string().min(3, {
+    name: z.string().min(3, {
         message : "Must be at at least 3 characters"
     },)
 })              

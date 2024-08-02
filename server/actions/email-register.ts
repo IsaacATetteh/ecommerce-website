@@ -9,7 +9,7 @@ import bcrypt from "bcrypt"
 import { generateEmailToken } from "./tokens";
 import { sendEmailVerification } from "./email-send";
 
-export const emailRegister = actionClient.schema(RegisterSchema).action(async ({ parsedInput: { email, password, username } }) => { 
+export const emailRegister = actionClient.schema(RegisterSchema).action(async ({ parsedInput: { email, password, name } }) => { 
   console.log(email, password);
  
   // Password hashing
@@ -37,7 +37,7 @@ export const emailRegister = actionClient.schema(RegisterSchema).action(async ({
   }
 
   //If the account doesn't exist insert the new user
-  await db.insert(users).values({email, username})
+  await db.insert(users).values({email, name})
   
   // Generate a new token for newly made account
   const verificationToken = await generateEmailToken(email);

@@ -1,7 +1,9 @@
 "use server"
 import { db } from "..";
 import { eq } from "drizzle-orm";
+import { users } from "../schema";
 import { verificationTokens } from "../schema";
+import { date } from "drizzle-orm/pg-core";
 
 export const getTokenByEmail = async(email : string) => {
    try {
@@ -34,3 +36,28 @@ export const generateEmailToken = async(email : string) => {
 
     return emailToken;
 }
+
+export const newVerification = async(token : string) => {
+    const existingToken = await getTokenByEmail(token)
+    if(!existingToken) return {error : "Invalid token"}
+
+    const tokenHasExpired = new Date(existingToken.expires) < new Date()
+
+    const existingUser = await db.query.users.findFirst({
+        where: eq(existingToken.email, users.email)
+    })
+
+    if(!existingUser) return { error: "User no longer exists" }
+
+    await db.update(users).set({
+        emailVerified: new Date(),
+        email: existingToken.email
+    })
+
+    await db.delete(verificationTokens).where(
+        eq(verificationTokens.id, existingToken.id)
+    )
+
+    return { success: "Email verified" }
+}
+
