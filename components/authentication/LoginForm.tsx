@@ -21,10 +21,14 @@ import { LoginScehma } from "@/types/login-schema";
 import * as z from "zod";
 import { Input } from "../ui/input";
 import { useAction } from "next-safe-action/hooks";
+import { FormSuccess } from "./FormSuccess";
+import { FormError } from "./FormError";
 
 /* Uses zodResolbrt with our login schema to validate the details */
 const LoginForm = () => {
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
   const form = useForm({
     resolver: zodResolver(LoginScehma),
     defaultValues: {
@@ -33,7 +37,16 @@ const LoginForm = () => {
     },
   });
 
-  const { execute, status } = useAction(emailSignIn, {}); // Provides "execute" function to trigger the action and status to track the action's status
+  const { execute, status } = useAction(emailSignIn, {
+    onSuccess(data) {
+      if (data.data?.error) {
+        setError(data.data.error);
+      }
+      if (data.data?.success) {
+        setSuccess(data.data.success);
+      }
+    },
+  }); // Provides "execute" function to trigger the action and status to track the action's status
 
   /* Infers the type from the zod schema*/
   const onSubmit = (values: z.infer<typeof LoginScehma>) => {
@@ -90,6 +103,8 @@ const LoginForm = () => {
                   </FormItem>
                 )}
               />
+              <FormSuccess message={success} />
+              <FormError message={error} />
               <Button variant={"link"} size={"sm"}>
                 <Link href="auth/reset">Forgot your passowrd?</Link>
               </Button>

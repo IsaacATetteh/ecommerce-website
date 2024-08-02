@@ -41,7 +41,7 @@ export const emailRegister = actionClient.schema(RegisterSchema).action(async ({
   
   // Generate a new token for newly made account
   const verificationToken = await generateEmailToken(email);
-  await sendEmailVerification(verificationToken[0].token, verificationToken[0].email);
+  await sendEmailVerification(verificationToken[0].email, verificationToken[0].token);
 
   return {success : "Email confirmation sent!"};
 });
