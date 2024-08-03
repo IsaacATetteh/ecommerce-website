@@ -5,8 +5,8 @@ import { eq } from "drizzle-orm";
 import Google from "next-auth/providers/google";
 import Github from "next-auth/providers/github";
 import bcrypt from "bcrypt";
-import { LoginScehma } from "@/types/login-schema";
-import Credentials from "@auth/core/providers/credentials";
+import { LoginSchema } from "@/types/login-schema";
+import Credentials from "next-auth/providers/credentials";
 import { users } from "./schema";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db),
@@ -23,13 +23,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
     Credentials({
       authorize: async (credentials) => {
-        const validatedFields = LoginScehma.safeParse(credentials);
+        const validatedFields = LoginSchema.safeParse(credentials);
+        
         if (validatedFields.success) {
+          console.log("reached here")
           const user = await db.query.users.findFirst({
             where: eq(users.email, validatedFields.data.email),
           });
 
           if (!user || !user.password) {
+            console.log("reached here")
             return null;
           }
 

@@ -10,14 +10,13 @@ import { emailSignIn } from "@/server/actions/email-signin";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "../ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginScehma } from "@/types/login-schema";
+import { LoginSchema } from "@/types/login-schema";
 import * as z from "zod";
 import { Input } from "../ui/input";
 import { useAction } from "next-safe-action/hooks";
@@ -30,7 +29,7 @@ const LoginForm = () => {
   const [success, setSuccess] = useState("");
 
   const form = useForm({
-    resolver: zodResolver(LoginScehma),
+    resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -49,7 +48,7 @@ const LoginForm = () => {
   }); // Provides "execute" function to trigger the action and status to track the action's status
 
   /* Infers the type from the zod schema*/
-  const onSubmit = (values: z.infer<typeof LoginScehma>) => {
+  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     execute(values);
   };
 

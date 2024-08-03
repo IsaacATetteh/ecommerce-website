@@ -37,7 +37,7 @@ export const emailRegister = actionClient.schema(RegisterSchema).action(async ({
   }
 
   //If the account doesn't exist insert the new user
-  await db.insert(users).values({email, name})
+  await db.insert(users).values({email, name, password: passwordHash}).execute();
   
   // Generate a new token for newly made account
   const verificationToken = await generateEmailToken(email);
