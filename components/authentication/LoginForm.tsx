@@ -105,13 +105,14 @@ const LoginForm = () => {
               <FormSuccess message={success} />
               <FormError message={error} />
               <Button variant={"link"} size={"sm"}>
-                <Link href="auth/reset">Forgot your passowrd?</Link>
+                <Link href="/auth/reset">Forgot your password?</Link>
               </Button>
             </div>
             <Button
               type="submit"
+              disabled={status === "executing"}
               className={cn(
-                "w-full",
+                "w-full mt-6",
                 status === "executing" ? "animate-pulse" : ""
               )}
             >

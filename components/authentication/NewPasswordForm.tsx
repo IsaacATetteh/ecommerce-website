@@ -6,103 +6,67 @@ import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { emailSignIn } from "@/server/actions/email-signin";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "../ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RegisterSchema } from "@/types/register-schema";
+import { LoginSchema } from "@/types/login-schema";
 import * as z from "zod";
 import { Input } from "../ui/input";
 import { useAction } from "next-safe-action/hooks";
-import { emailRegister } from "@/server/actions/email-register";
 import { FormSuccess } from "./FormSuccess";
 import { FormError } from "./FormError";
+import { NewPasswordSchema } from "@/types/new-password-schema";
+import { newPassword } from "@/server/actions/new-password";
+import { useSearchParams } from "next/navigation";
 /* Uses zodResolbrt with our login schema to validate the details */
-const RegisterForm = () => {
+const NewPasswordForm = () => {
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const form = useForm<z.infer<typeof RegisterSchema>>({
-    resolver: zodResolver(RegisterSchema),
+  const form = useForm<z.infer<typeof NewPasswordSchema>>({
+    resolver: zodResolver(NewPasswordSchema),
     defaultValues: {
-      email: "",
       password: "",
-      name: "",
     },
   });
 
-  // Provides "execute" function to trigger the action and status to track the action's status
-  const { execute, status } = useAction(emailRegister, {
+  const { execute, status } = useAction(newPassword, {
     onSuccess(data) {
       if (data.data?.error) {
         setError(data.data.error);
       }
       if (data.data?.success) {
-        setSuccess(data.data?.success);
+        setSuccess(data.data.success);
       }
     },
-  });
+  }); // Provides "execute" function to trigger the action and status to track the action's status
 
   /* Infers the type from the zod schema*/
-  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
-    execute(values);
+  const onSubmit = (values: z.infer<typeof NewPasswordSchema>) => {
+    execute({ password: values.password, token });
   };
 
   return (
     <div className="flex justify-center border-2 w-full border-red-500">
       <AuthCard
-        cardTitle="Register an account"
+        cardTitle="Reset your password"
         backButtonHref="/auth/login"
-        backButtonLabel="Already have an account?"
+        backButtonLabel="Go back to login"
         showSocials
       >
         {/* Spreads the form properties object returned by "useForm" as props onto the Form component  */}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div>
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="text"
-                        placeholder="johndoe@gmail.com"
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="email"
-                        autoComplete="email"
-                        placeholder="johndoe@gmail.com"
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               <FormField
                 control={form.control}
                 name="password"
@@ -122,8 +86,8 @@ const RegisterForm = () => {
                   </FormItem>
                 )}
               />
-              <FormError message={error} />
               <FormSuccess message={success} />
+              <FormError message={error} />
             </div>
             <Button
               type="submit"
@@ -133,7 +97,7 @@ const RegisterForm = () => {
                 status === "executing" ? "animate-pulse" : ""
               )}
             >
-              {"Register"}
+              {"Reset password"}
             </Button>
           </form>
         </Form>
@@ -142,4 +106,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default NewPasswordForm;
