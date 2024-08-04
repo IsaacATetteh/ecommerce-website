@@ -24,15 +24,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Credentials({
       authorize: async (credentials) => {
         const validatedFields = LoginSchema.safeParse(credentials);
-        
+
         if (validatedFields.success) {
-          console.log("reached here")
           const user = await db.query.users.findFirst({
             where: eq(users.email, validatedFields.data.email),
           });
 
           if (!user || !user.password) {
-            console.log("reached here")
             return null;
           }
 
@@ -41,11 +39,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             user.password
           );
           if (passwordMatch) {
-            console.log("matched!")
             return user;
           }
         }
-        console.log("not matched!")
         return null;
       },
     }),
