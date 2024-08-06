@@ -9,11 +9,12 @@ import { generateEmailToken } from "./tokens";
 import { sendEmailVerification } from "./email-send";
 import { signIn } from "../auth";
 import { AuthError } from "next-auth";
+import { get } from "http";
 
 export const emailSignIn = actionClient
   .schema(LoginSchema)
   .action(async ({ parsedInput: { email, password, code } }) => {
-    console.log(email, password, code);
+    //console.log(email, password, code);
     try {
       const existingUser = await db.query.users.findFirst({
         where: eq(users.email, email),
@@ -30,6 +31,14 @@ export const emailSignIn = actionClient
           verificationToken[0].token
         );
         return { success: "Email confirmation sent" };
+      }
+
+      if (existingUser.twoFactorEnabled && existingUser.email) {
+        if (code) {
+          const twoFactorToken = await getTwoFactorTokenByEmail(
+            existingUser.email
+          );
+        }
       }
 
       await signIn("credentials", {

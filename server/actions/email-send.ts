@@ -8,7 +8,7 @@ const domain = getBaseURL();
 
 export const sendEmailVerification = async (email: string, token: string) => {
   const confirmationLink = `${domain}/auth/verify?token=${token}`;
-  console.log("--->" + email);
+  //console.log("--->" + email);
   const { data, error } = await resend.emails.send({
     from: "Acme <onboarding@resend.dev>",
     to: email,
@@ -23,7 +23,7 @@ export const sendEmailVerification = async (email: string, token: string) => {
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
   const resetLink = `${domain}/auth/new-password?token=${token}`;
-  console.log("--->" + email);
+  // console.log("--->" + email);
   const { data, error } = await resend.emails.send({
     from: "Acme <onboarding@resend.dev>",
     to: email,

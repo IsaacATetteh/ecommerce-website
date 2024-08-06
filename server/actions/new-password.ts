@@ -18,7 +18,7 @@ export const newPassword = actionClient
       connectionString: process.env.DRIZZLE_DATABASE_URL!,
     });
     const dbPool = drizzle(pool);
-    console.log(password, token);
+    //console.log(password, token);
     if (!token) {
       return { error: "No token provided" };
     }
@@ -38,8 +38,6 @@ export const newPassword = actionClient
     const existingUser = await db.query.users.findFirst({
       where: eq(users.email, existingToken.email),
     });
-
-    console.log(existingUser);
 
     if (!existingUser) {
       return { error: "User does not exist" };

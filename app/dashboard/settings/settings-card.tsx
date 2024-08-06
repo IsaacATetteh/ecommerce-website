@@ -27,12 +27,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Session } from "next-auth";
 import { Input } from "@/components/ui/input";
-import { SettingSchema } from "@/types/settings-schema";
+import { SettingsSchema } from "@/types/settings-schema";
 import Image from "next/image";
 import { FormError } from "@/components/authentication/FormError";
 import { FormSuccess } from "@/components/authentication/FormSuccess";
 import { emailRegister } from "@/server/actions/email-register";
 import { useAction } from "next-safe-action/hooks";
+import { settings } from "@/server/actions/settings";
 
 type SettingsForm = {
   session: Session;
@@ -43,19 +44,19 @@ function SettingsCard(session: SettingsForm) {
   const [success, setSuccess] = useState("");
   const [loadingImage, setLoadingImage] = useState(false);
 
-  const form = useForm<z.infer<typeof SettingSchema>>({
-    resolver: zodResolver(SettingSchema),
+  const form = useForm<z.infer<typeof SettingsSchema>>({
+    resolver: zodResolver(SettingsSchema),
     defaultValues: {
-      name: undefined,
+      name: session.session.user?.name || undefined,
       password: undefined,
       newPassword: undefined,
-      email: undefined,
-      image: undefined,
-      isTwofactorEnabled: undefined,
+      email: session.session.user?.email || undefined,
+      image: session.session.user.image || undefined,
+      isTwoFactorEnabled: session.session.user?.istwoFactorEnabled || undefined,
     },
   });
 
-  const { execute, status } = useAction(emailRegister, {
+  const { execute, status } = useAction(settings, {
     onSuccess(data) {
       if (data.data?.error) {
         setError(data.data.error);
@@ -64,9 +65,13 @@ function SettingsCard(session: SettingsForm) {
         setSuccess(data.data?.success);
       }
     },
+    onError(error) {
+      setError("error");
+    },
   });
 
-  const onSubmit = (values: z.infer<typeof SettingSchema>) => {
+  const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
+    console.log(values);
     execute(values);
   };
 
@@ -146,7 +151,10 @@ function SettingsCard(session: SettingsForm) {
                   <FormControl>
                     <Input
                       placeholder="********"
-                      disabled={form.formState.isSubmitting}
+                      disabled={
+                        form.formState.isSubmitting ||
+                        session.session.user.isoAuth
+                      }
                       {...field}
                     />
                   </FormControl>
@@ -163,7 +171,10 @@ function SettingsCard(session: SettingsForm) {
                   <FormControl>
                     <Input
                       placeholder="********"
-                      disabled={form.formState.isSubmitting}
+                      disabled={
+                        form.formState.isSubmitting ||
+                        session.session.user.isoAuth
+                      }
                       {...field}
                     />
                   </FormControl>
@@ -173,24 +184,30 @@ function SettingsCard(session: SettingsForm) {
             />
             <FormField
               control={form.control}
-              name="isTwofactorEnabled"
+              name="isTwoFactorEnabled"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col gap-2">
                   <FormLabel>Two Factor Authentication</FormLabel>
                   <FormControl>
-                    <Switch disabled={status === "executing"} />
+                    <Switch
+                      disabled={
+                        status === "executing" || session.session.user.isoAuth
+                      }
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormError />
-            <FormSuccess />
+            <FormError message={error} />
+            <FormSuccess message={success} />
             <Button
               disabled={status === "executing" || loadingImage}
               type="submit"
             >
-              Update
+              Update Settings
             </Button>
           </form>
         </Form>

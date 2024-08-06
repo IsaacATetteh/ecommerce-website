@@ -83,7 +83,7 @@ const UserIcon = ({ user }: Session) => {
                 ) : (
                   <FaSun className="group-hover:scale-110 transition-all duration-300 ease-in-out" />
                 )}
-                <p>{theme.charAt(0).toUpperCase() + theme.slice(1)}</p>
+                <p>{theme.charAt(0).toUpperCase() + theme.slice(1)} Theme</p>
               </div>
             </DropdownMenuItem>
           )}

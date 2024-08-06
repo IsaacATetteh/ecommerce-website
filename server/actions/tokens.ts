@@ -3,6 +3,7 @@ import { db } from "..";
 import { eq } from "drizzle-orm";
 import { passwordResetTokens, users } from "../schema";
 import { verificationTokens } from "../schema";
+import { twoFactorTokens } from "../schema";
 
 export const getTokenByEmail = async (email: string) => {
   try {
@@ -83,6 +84,28 @@ export const getPasswordResetTokenByEmail = async (email: string) => {
       where: eq(passwordResetTokens.email, email),
     });
     return passwordResetToken;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const getTwoFactorTokenByEmail = async (email: string) => {
+  try {
+    const twoFactorToken = db.query.twoFactorTokens.findFirst({
+      where: eq(twoFactorTokens.email, email),
+    });
+    return twoFactorToken;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const getTwoFactorTokenByToken = async (token: string) => {
+  try {
+    const twoFactorToken = await db.query.twoFactorTokens.findFirst({
+      where: eq(twoFactorTokens.token, token),
+    });
+    return twoFactorTokens;
   } catch (error) {
     return null;
   }

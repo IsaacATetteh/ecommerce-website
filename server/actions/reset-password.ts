@@ -14,9 +14,7 @@ export const reset = actionClient
     const existingUser = await db.query.users.findFirst({
       where: eq(users.email, email),
     });
-    console.log("reached");
     if (!existingUser) {
-      console.log("User does not exist");
       return { error: "User does not exist" };
     }
 
