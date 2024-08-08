@@ -21,7 +21,6 @@ import { Input } from "../ui/input";
 import { useAction } from "next-safe-action/hooks";
 import { FormSuccess } from "./FormSuccess";
 import { FormError } from "./FormError";
-import { NewPasswordSchema } from "@/types/new-password-schema";
 import { ResetSchema } from "@/types/reset-schema";
 import { reset } from "@/server/actions/reset-password";
 /* Uses zodResolbrt with our login schema to validate the details */

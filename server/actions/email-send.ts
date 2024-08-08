@@ -35,3 +35,16 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
     return console.error(error);
   }
 };
+
+export const sendTwoFactorEmail = async (email: string, token: string) => {
+  const { data, error } = await resend.emails.send({
+    from: "Acme <onboarding@resend.dev>",
+    to: email,
+    subject: "Isaac ecommerce website",
+    html: `<p>Your confirmation code: ${token}</p>`,
+  });
+
+  if (error) {
+    return console.error(error);
+  }
+};

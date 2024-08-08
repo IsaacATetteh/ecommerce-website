@@ -4,12 +4,10 @@ import React, { useState } from "react";
 import { AuthCard } from "./Auth-Card";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -55,7 +53,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="flex justify-center border-2 w-full border-red-500">
+    <div className="flex justify-center w-full">
       <AuthCard
         cardTitle="Register an account"
         backButtonHref="/auth/login"

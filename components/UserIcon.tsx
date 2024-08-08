@@ -38,7 +38,7 @@ const UserIcon = ({ user }: Session) => {
         <DropdownMenuTrigger>
           <Avatar className="w-7 h-7">
             {user.image && (
-              <Image src={user.image} alt={user.name!} fill={true} />
+              <Image src={user.image} alt={user.name!} width={50} height={50} />
             )}
             {!user.image && (
               <AvatarFallback className="bg-primary/25">
@@ -53,11 +53,11 @@ const UserIcon = ({ user }: Session) => {
           <div className="flex flex-col items-center justify-center  bg-primary/10 rounded-lg py-3 gap-[2px]">
             {user.image && (
               <Image
-                className="rounded-full"
+                className="rounded-full h-9 w-9"
                 src={user.image}
                 alt={user.name!}
-                width={30}
-                height={30}
+                width={50}
+                height={50}
               />
             )}
             <p className="text-md font-semibold">{user.name}</p>

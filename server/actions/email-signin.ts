@@ -5,11 +5,13 @@ import { actionClient } from "@/lib/safe-action";
 import { db } from "..";
 import { eq } from "drizzle-orm";
 import { users } from "../schema";
-import { generateEmailToken } from "./tokens";
+import { generateEmailToken, generateTwoFactorToken } from "./tokens";
 import { sendEmailVerification } from "./email-send";
 import { signIn } from "../auth";
 import { AuthError } from "next-auth";
-import { get } from "http";
+import { getTwoFactorTokenByEmail } from "./tokens";
+import { twoFactorTokens } from "../schema";
+import { sendTwoFactorEmail } from "./email-send";
 
 export const emailSignIn = actionClient
   .schema(LoginSchema)
@@ -34,18 +36,44 @@ export const emailSignIn = actionClient
       }
 
       if (existingUser.twoFactorEnabled && existingUser.email) {
+        console.log("User exists");
+
         if (code) {
+          console.log("Two factor code provided", code);
           const twoFactorToken = await getTwoFactorTokenByEmail(
             existingUser.email
           );
+          if (!twoFactorToken || twoFactorToken.token !== code) {
+            console.log("error1");
+            return { error: "Invalid two factor code" };
+          }
+          const tokenExpired = new Date(twoFactorToken.expires) < new Date();
+          if (tokenExpired) {
+            console.log("error2");
+            return { error: "Two factor token has expired" };
+          }
+          await db
+            .delete(twoFactorTokens)
+            .where(eq(twoFactorTokens.id, twoFactorToken.id));
+        } else {
+          const token = await generateTwoFactorToken(existingUser.email);
+          if (!token) {
+            return { error: "Failed to generate two factor token" };
+          }
+          await sendTwoFactorEmail(token[0].email, token[0].token);
+          console.log("Two factor token sent");
+          return { twoFactor: "Two factor token sent" };
         }
       }
+      console.log("Before Signed in");
 
       await signIn("credentials", {
         email,
         password,
         redirectTo: "/",
       });
+
+      console.log("Signed in");
 
       return { success: email };
     } catch (error) {

@@ -34,6 +34,7 @@ import { FormSuccess } from "@/components/authentication/FormSuccess";
 import { emailRegister } from "@/server/actions/email-register";
 import { useAction } from "next-safe-action/hooks";
 import { settings } from "@/server/actions/settings";
+import { UploadButton } from "@/src/utils/uploadthing";
 
 type SettingsForm = {
   session: Session;
@@ -110,7 +111,7 @@ function SettingsCard(session: SettingsForm) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Profile Picture</FormLabel>
-                  <div className="flex">
+                  <div className="flex items-center">
                     {!form.getValues("image") && (
                       <div>
                         {session.session.user?.name?.charAt(0).toUpperCase()}
@@ -122,9 +123,33 @@ function SettingsCard(session: SettingsForm) {
                         alt="Profile Picture"
                         width={50}
                         height={50}
-                        className="rounded-full"
+                        className="rounded-full h-12 w-12"
                       />
                     )}
+                    <UploadButton
+                      className="scale-75 ut-button:bg-primary  ut-button:text-primary-foreground  ut-button:hover:bg-primary/90"
+                      endpoint="imageUploader"
+                      content={{
+                        button({ ready }) {
+                          if (ready) return <div>Change Picutre</div>;
+                          return <div>Loading...</div>;
+                        },
+                      }}
+                      onUploadBegin={() => {
+                        setLoadingImage(true);
+                      }}
+                      onClientUploadComplete={(res) => {
+                        // Do something with the response
+                        setLoadingImage(true);
+                        form.setValue("image", res[0].url);
+                        setLoadingImage(false);
+                        return;
+                      }}
+                      onUploadError={(error: Error) => {
+                        // Do something with the error.
+                        setLoadingImage(false);
+                      }}
+                    />
                   </div>
                   <FormControl>
                     <Input
