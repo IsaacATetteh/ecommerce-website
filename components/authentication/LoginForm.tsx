@@ -10,7 +10,6 @@ import { emailSignIn } from "@/server/actions/email-signin";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 
