@@ -6,12 +6,16 @@ import {
   primaryKey,
   integer,
   pgEnum,
+  serial,
+  real,
 } from "drizzle-orm/pg-core";
 
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
 import type { AdapterAccount } from "next-auth/adapters";
 import { createId } from "@paralleldrive/cuid2";
+import { title } from "process";
+import { desc } from "drizzle-orm";
 
 const connectionString = "postgres://postgres:postgres@localhost:5432/drizzle";
 const pool = postgres(connectionString, { max: 1 });
@@ -108,3 +112,11 @@ export const twoFactorTokens = pgTable(
     }),
   })
 );
+
+export const Products = pgTable("products", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  created: timestamp("created").defaultNow(),
+  price: real("price").notNull(),
+});

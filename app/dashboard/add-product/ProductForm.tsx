@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
+import Tiptap from "./Tiptap";
+
 import {
   Card,
   CardContent,
@@ -27,11 +29,13 @@ import { FaPoundSign } from "react-icons/fa";
 
 function ProductForm() {
   const form = useForm<z.infer<typeof ProductSchema>>({
+    resolver: zodResolver(ProductSchema),
     defaultValues: {
       title: "",
       price: 0,
       description: "",
     },
+    mode: "onChange",
   });
 
   const onSubmit = (values: z.infer<typeof ProductSchema>) => {
@@ -55,7 +59,7 @@ function ProductForm() {
                   <FormControl>
                     <Input placeholder="Plantain Chips" {...field} />
                   </FormControl>
-                  <FormDescription>The name of the product</FormDescription>
+
                   <FormMessage />
                 </FormItem>
               )}
@@ -67,7 +71,7 @@ function ProductForm() {
                 <FormItem className=" space-y-3">
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input placeholder="Plantain Chips" {...field} />
+                    <Tiptap value={field.value} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
