@@ -3,30 +3,25 @@ import React from "react";
 import z from "zod";
 import { ProductSchema } from "@/types/product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAction } from "next-safe-action/hooks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { createProduct } from "@/server/actions/create-product";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import Tiptap from "./Tiptap";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { FaPoundSign } from "react-icons/fa";
-
+import { cn } from "@/lib/utils";
 function ProductForm() {
   const form = useForm<z.infer<typeof ProductSchema>>({
     resolver: zodResolver(ProductSchema),
@@ -38,9 +33,24 @@ function ProductForm() {
     mode: "onChange",
   });
 
-  const onSubmit = (values: z.infer<typeof ProductSchema>) => {
-    // execute(values);
-  };
+  const { execute, status } = useAction(createProduct, {
+    onSuccess: (data) => {
+      if (data.data?.success) {
+        router.push("/dashboard/products");
+        toast.success("Product created successfully");
+        console.log(data.data.success);
+      }
+      if (data.data?.error) {
+        toast.error(data.data.error);
+      }
+    },
+  });
+
+  const router = useRouter();
+
+  async function onSubmit(values: z.infer<typeof ProductSchema>) {
+    execute(values);
+  }
 
   return (
     <Card>
@@ -99,7 +109,20 @@ function ProductForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <Button
+              className={cn(
+                "w-full mt-6",
+                status === "executing" ? "animate-pulse" : ""
+              )}
+              disabled={
+                status === "executing" ||
+                !form.formState.isDirty ||
+                !form.formState.isValid
+              }
+              type="submit"
+            >
+              Submit
+            </Button>
           </form>
         </Form>
       </CardContent>
