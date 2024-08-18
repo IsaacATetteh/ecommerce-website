@@ -13,7 +13,7 @@ function DashboardNavBar({
   console.log(pathname);
 
   return (
-    <nav className="px-5 py-2 text-sm font-semibold">
+    <nav className=" py-2 text-sm font-semibold my-5">
       <ul className="flex gap-5">
         <AnimatePresence>
           {allLinks.map((link, index) => (

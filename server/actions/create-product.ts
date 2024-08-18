@@ -35,6 +35,7 @@ export const createProduct = actionClient
         .insert(products)
         .values({ title, price, description })
         .returning();
+      revalidatePath("/dashboard/products");
 
       return { success: `${newProduct[0].title} created` };
     } catch (error) {

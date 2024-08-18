@@ -1,14 +1,15 @@
 "use client";
-import React from "react";
-import z from "zod";
+import React, { useEffect } from "react";
+import z, { number } from "zod";
 import { ProductSchema } from "@/types/product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getProducts } from "@/server/actions/get-product";
 import { createProduct } from "@/server/actions/create-product";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import Tiptap from "./Tiptap";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -47,6 +48,32 @@ function ProductForm() {
   });
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const edit = searchParams.get("id");
+
+  const checkProduct = async (id: number) => {
+    if (edit) {
+      const data = await getProducts(id);
+      if (data.error) {
+        toast.error(data.error);
+        router.push("/dashboard/products");
+        return;
+      }
+      if (data.sucess) {
+        const id = parseInt(edit);
+        form.setValue("id", id);
+        form.setValue("title", data.sucess.title);
+        form.setValue("price", data.sucess.price);
+        form.setValue("description", data.sucess.description);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (edit) {
+      checkProduct(parseInt(edit));
+    }
+  }, []);
 
   async function onSubmit(values: z.infer<typeof ProductSchema>) {
     execute(values);
@@ -55,7 +82,7 @@ function ProductForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Add a Product</CardTitle>
+        <CardTitle>{edit ? "Edit Product" : "Add a Product"}</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -121,7 +148,7 @@ function ProductForm() {
               }
               type="submit"
             >
-              Submit
+              {edit ? "Edit Product" : "Add Product"}
             </Button>
           </form>
         </Form>

@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { useAction } from "next-safe-action/hooks";
 import { deleteProduct } from "@/server/actions/delete-product";
 import { toast } from "sonner";
+import Link from "next/link";
 import { exec } from "child_process";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -55,7 +56,7 @@ const ActionCell = ({ row }: { row: Row<ProductList> }) => {
   });
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button className="bg-primary/75 scale-75">
           <IoIosMore className="text-white" />
@@ -64,7 +65,9 @@ const ActionCell = ({ row }: { row: Row<ProductList> }) => {
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Edit</DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href={`/dashboard/add-product?id=${product.id}`}>Edit</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => execute({ id: product.id })}
           className="dark:focus:bg-destructive focus:bg-destructive/50"
