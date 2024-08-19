@@ -12,7 +12,7 @@ import {
   FaStrikethrough,
   FaListOl,
 } from "react-icons/fa";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 const Tiptap = ({ value }: { value: string }) => {
   const { setValue } = useFormContext();

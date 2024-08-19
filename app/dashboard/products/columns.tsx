@@ -15,16 +15,25 @@ import { useAction } from "next-safe-action/hooks";
 import { deleteProduct } from "@/server/actions/delete-product";
 import { toast } from "sonner";
 import Link from "next/link";
-import { exec } from "child_process";
+import ProductVariant from "./product-variant";
+import { VariantsWithImagesTags } from "@/lib/inter-type";
+import { FaPlusCircle } from "react-icons/fa";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export type ProductList = {
   id: number;
   title: string | undefined;
   price: number;
   image: string;
-  variants: any;
+  variants: VariantsWithImagesTags[];
 };
 
 async function handleDelete(id: number) {
@@ -117,6 +126,46 @@ export const columns: ColumnDef<ProductList>[] = [
   {
     accessorKey: "variants",
     header: "Variants",
+    cell: ({ row }) => {
+      const variants = row.getValue("variants") as VariantsWithImagesTags[];
+      return (
+        <div>
+          {variants.map((variant) => (
+            <div key={variant.id}>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <ProductVariant
+                      producID={variant.productID}
+                      variant={variant}
+                      editMode
+                    >
+                      <div
+                        className="w-5 h-5 rounded-full"
+                        style={{ backgroundColor: variant.colour }}
+                      />
+                    </ProductVariant>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{variant.productType}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          ))}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <ProductVariant editMode={false}>
+                  <FaPlusCircle className="w-5 h-5" />
+                </ProductVariant>
+              </TooltipTrigger>
+              <TooltipContent>Create a new variant</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "actions",

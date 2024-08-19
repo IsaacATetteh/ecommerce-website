@@ -7,6 +7,7 @@ import { columns } from "./columns";
 
 async function Products() {
   const products = await db.query.products.findMany({
+    with: { productVariants: { with: { variantImages: true } } },
     orderBy: (products, { desc }) => [desc(products.id)],
   });
   if (!products) return <div>No products found</div>;
