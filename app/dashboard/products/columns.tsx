@@ -15,7 +15,7 @@ import { useAction } from "next-safe-action/hooks";
 import { deleteProduct } from "@/server/actions/delete-product";
 import { toast } from "sonner";
 import Link from "next/link";
-import ProductVariant from "./product-variant";
+import { ProductVariant } from "./product-variant";
 import { VariantsWithImagesTags } from "@/lib/inter-type";
 import { FaPlusCircle } from "react-icons/fa";
 // This type is used to define the shape of our data.
@@ -136,7 +136,7 @@ export const columns: ColumnDef<ProductList>[] = [
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <ProductVariant
-                      producID={variant.productID}
+                      productID={variant.productID}
                       variant={variant}
                       editMode
                     >

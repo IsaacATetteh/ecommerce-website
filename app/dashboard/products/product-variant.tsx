@@ -25,8 +25,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ProductInputTags } from "./ProductInputTags";
+import VariantImages from "./VariantImages";
 
-function ProductVariant({
+export const ProductVariant = ({
   editMode,
   productID,
   variant,
@@ -36,7 +38,7 @@ function ProductVariant({
   productID?: number;
   variant?: VariantsWithImagesTags;
   children: React.ReactNode;
-}) {
+}) => {
   const form = useForm<z.infer<typeof VariantSchema>>({
     resolver: zodResolver(VariantSchema),
     defaultValues: {
@@ -59,7 +61,7 @@ function ProductVariant({
   return (
     <Dialog>
       <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className="lg:max-w-screen-lg overflow-y-scroll rounded-md max-h-[850px]">
         <DialogHeader>
           <DialogTitle>{editMode ? "Add" : "Create"} your varitant</DialogTitle>
           <DialogDescription>Manage product variants</DialogDescription>
@@ -72,14 +74,12 @@ function ProductVariant({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel> Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="" {...field} />
-                  </FormControl>
+                  <FormControl></FormControl>
                   <FormDescription>The name of your variant.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
-            />{" "}
+            />
             <FormField
               control={form.control}
               name="colour"
@@ -93,7 +93,8 @@ function ProductVariant({
                   <FormMessage />
                 </FormItem>
               )}
-            />{" "}
+            />
+            <VariantImages />
             <FormField
               control={form.control}
               name="tags"
@@ -101,7 +102,10 @@ function ProductVariant({
                 <FormItem>
                   <FormLabel>Tags</FormLabel>
                   <FormControl>
-                    <Input placeholder="Hoodies" {...field} />
+                    <ProductInputTags
+                      {...field}
+                      onChange={(e) => field.onChange(e)}
+                    />
                   </FormControl>
 
                   <FormMessage />
@@ -114,7 +118,6 @@ function ProductVariant({
               </Button>
             )}
             <Button type="submit">
-              {" "}
               {editMode ? "Update" : "Create"} Variant
             </Button>
           </form>
@@ -122,6 +125,4 @@ function ProductVariant({
       </DialogContent>
     </Dialog>
   );
-}
-
-export default ProductVariant;
+};
