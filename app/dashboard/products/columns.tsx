@@ -114,12 +114,10 @@ export const columns: ColumnDef<ProductList>[] = [
     header: "Image",
     cell: ({ row }) => {
       const cellTitle = row.getValue("title") as string;
+      const cellImage = row.getValue("image") as string;
+      console.log(cellImage);
       return (
-        <img
-          className="w-10 h-8 rounded-md"
-          src={row.getValue("image")}
-          alt={cellTitle}
-        />
+        <img className="w-10 h-8 rounded-md" src={cellImage} alt={cellTitle} />
       );
     },
   },
@@ -128,21 +126,23 @@ export const columns: ColumnDef<ProductList>[] = [
     header: "Variants",
     cell: ({ row }) => {
       const variants = row.getValue("variants") as VariantsWithImagesTags[];
+      console.log(variants);
       return (
-        <div>
+        <div className="flex gap-2">
           {variants.map((variant) => (
             <div key={variant.id}>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <ProductVariant
-                      productID={variant.productID}
+                      productID={row.original.id}
                       variant={variant}
                       editMode
                     >
                       <div
                         className="w-5 h-5 rounded-full"
-                        style={{ backgroundColor: variant.colour }}
+                        key={variant.id}
+                        style={{ background: variant.colour }}
                       />
                     </ProductVariant>
                   </TooltipTrigger>
@@ -156,7 +156,7 @@ export const columns: ColumnDef<ProductList>[] = [
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <ProductVariant editMode={false}>
+                <ProductVariant editMode={false} productID={row.original.id}>
                   <FaPlusCircle className="w-5 h-5" />
                 </ProductVariant>
               </TooltipTrigger>

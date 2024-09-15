@@ -4,9 +4,7 @@ import React, { useState } from "react";
 import { AuthCard } from "./Auth-Card";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { emailSignIn } from "@/server/actions/email-signin";
 import {
   Form,
   FormControl,
@@ -16,7 +14,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginSchema } from "@/types/login-schema";
 import * as z from "zod";
 import { Input } from "../ui/input";
 import { useAction } from "next-safe-action/hooks";

@@ -80,7 +80,7 @@ const LoginForm = () => {
                   name="code"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>Code</FormLabel>
                       <FormControl>
                         <InputOTP
                           maxLength={6}

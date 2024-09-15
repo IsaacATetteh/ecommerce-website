@@ -20,13 +20,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(`${inter.className}`, "px-6 md:px-12 mx-auto max-w-7xl")}
-      >
+      <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <Navbar />
-          {children}
-          <Toaster richColors />
+          <div className="px-6 md:px-12 mx-auto max-w-7xl">
+            <Navbar />
+            {children}
+            <Toaster richColors />
+          </div>
         </ThemeProvider>
       </body>
     </html>

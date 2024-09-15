@@ -43,7 +43,7 @@ function VariantImages() {
         name="variantImages"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Username</FormLabel>
+            <FormLabel>Images</FormLabel>
             <FormControl>
               <UploadDropzone
                 className="hover:bg-primary/10 transition-all ut-button:bg-primary ut-upload-icon:text-primary/50 duration-500 ease-in-out rounded-md "
@@ -86,7 +86,6 @@ function VariantImages() {
                 config={{ mode: "auto" }}
               />
             </FormControl>
-            <FormDescription>This is your public display name.</FormDescription>
             <FormMessage />
           </FormItem>
         )}

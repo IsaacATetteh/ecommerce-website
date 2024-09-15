@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import z, { number } from "zod";
+import * as z from "zod";
 import { ProductSchema } from "@/types/product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";

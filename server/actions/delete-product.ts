@@ -14,9 +14,9 @@ const DeleteProductSchema = z.object({
 });
 
 export const deleteProduct = actionClient
-  .schema(DeleteProductSchema) // Use the schema here
+  .schema(DeleteProductSchema)
   .action(async ({ parsedInput }) => {
-    const { id } = parsedInput; // Destructure the id from parsedInput
+    const { id } = parsedInput;
     try {
       const product = await db
         .delete(products)
